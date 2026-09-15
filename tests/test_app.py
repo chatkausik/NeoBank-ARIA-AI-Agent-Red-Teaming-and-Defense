@@ -1,6 +1,7 @@
 """Offline regressions for configuration changes and evidence navigation."""
 
 from pathlib import Path
+import json
 
 import dotenv
 import openai
@@ -188,3 +189,74 @@ def test_chat_setup_failure_uses_safe_error_evidence(offline_app, monkeypatch, t
     assert entry["error"] == "request_failed"
     assert "private exception payload" not in str(app.session_state["messages"])
     assert "private exception payload" not in (tmp_path / "manual.jsonl").read_text()
+
+
+def test_currency_display_preserves_raw_history_and_evidence(
+    offline_app, monkeypatch, tmp_path
+):
+    """Fresh and replayed amounts must not become a Markdown math expression."""
+    from ui import reports
+
+    log_path = tmp_path / "manual.jsonl"
+    monkeypatch.setattr(reports, "RT_LOG_PATH", str(log_path))
+    history = [
+        {"role": "user", "content": "Was the fee $15 or $25?"},
+        {"role": "assistant", "content": r"The fee is **$15**, not $25; quoted: \$15."},
+    ]
+    prompt = "Show my $2,240.00 balance and $42.00 transaction."
+    response = (
+        "Your current balance is $2,240.00. Your most recent transaction "
+        "was a debit card purchase of $42.00 at Whole Foods Market."
+    )
+    expected_prompt = r"Show my \$2,240.00 balance and \$42.00 transaction."
+    expected_response = (
+        r"Your current balance is \$2,240.00. Your most recent transaction "
+        r"was a debit card purchase of \$42.00 at Whole Foods Market."
+    )
+    captured_requests = []
+
+    def guarded(**kwargs):
+        captured_requests.append(kwargs)
+        return {"response": response, "trace": [],
+                "guard_state": kwargs["guard_state"], "tool_calls": [],
+                "execution_status": "ok", "error": None}
+
+    monkeypatch.setattr(pipeline, "invoke_guarded", guarded)
+    rendered = []
+    markdown = st.markdown
+
+    def record_markdown(body, *args, **kwargs):
+        rendered.append(body)
+        return markdown(body, *args, **kwargs)
+
+    monkeypatch.setattr(st, "markdown", record_markdown)
+    app = offline_app
+    for key, value in {"logged_in": True, "user_name": "Alex Mercer", "user_id": "USR-0042",
+                       "account_tier": "Standard", "api_key": "offline-test-key",
+                       "api_key_validated": "offline-test-key", "messages": list(history),
+                       "defense_mode": "Guarded"}.items():
+        app.session_state[key] = value
+    app.run()
+    assert not app.exception
+    assert r"Was the fee \$15 or \$25?" in rendered
+    assert r"The fee is **\$15**, not \$25; quoted: \$15." in rendered
+
+    rendered.clear()
+    app.chat_input[0].set_value(prompt).run()
+    assert not app.exception
+    # The submitted turn renders once immediately, then again on the app rerun.
+    assert rendered.count(expected_prompt) >= 2
+    assert rendered.count(expected_response) >= 2
+    assert any(item.value == expected_response for item in app.markdown)
+    assert len(captured_requests) == 1
+    assert captured_requests[0]["user_message"] == prompt
+    assert captured_requests[0]["chat_history"] == history
+    assert app.session_state["messages"][:2] == history
+    assert app.session_state["messages"][-2]["content"] == prompt
+    assert app.session_state["messages"][-1]["content"] == response
+    entry = app.session_state["rt_log"][-1]
+    assert entry["prompt"] == prompt
+    assert entry["response"] == response
+    saved = json.loads(log_path.read_text())
+    assert saved["prompt"] == prompt
+    assert saved["response"] == response

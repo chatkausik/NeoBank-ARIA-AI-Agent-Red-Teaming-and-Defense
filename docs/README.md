@@ -13,6 +13,7 @@ This documentation describes the completed fictional banking-agent security proj
 | [Architecture atlas — editable Mermaid](architecture.md) | Six diagrams with source references, design rationale, and trust assumptions |
 | [Architecture atlas — visual HTML](../architecture.html) | An offline visual guide to the system, requests, data access, risk, evaluation, and SQLite schema |
 | [Validation record](validation.md) | Offline test coverage, live-run provenance, results, and limits of the validation |
+| [UI validation and screenshots](ui_validation.md) | Four fresh chat checks, the saved findings dashboard, and the current 264-test regression result |
 | [Code review and improvements](code_review.md) | What was found, what changed, why it matters, and outstanding risks |
 | [Visual findings report](findings_report.html) | Filterable outcome comparisons and per-turn execution evidence |
 | [Markdown findings report](findings_report.md) | The generated evidence report in an editable text format |
@@ -21,7 +22,7 @@ This documentation describes the completed fictional banking-agent security proj
 
 ## Recorded validation snapshot
 
-The final September 15, 2026 `gpt-4o-mini` comparison contains **106 cases and 126 turns**. The separately recorded offline suite has **263 passing tests**.
+The final September 15, 2026 `gpt-4o-mini` comparison contains **106 cases and 126 turns**. The archived offline snapshot has **263 passing tests**. The subsequent [UI validation supplement](ui_validation.md) adds five screenshots and records **264 passing offline tests** after the currency display fix; it does not rerun or alter the archived comparison.
 
 | Mode | Adversarial PASS | WARN | FAIL | UNKNOWN | Benign utility PASS |
 |---|---:|---:|---:|---:|---:|

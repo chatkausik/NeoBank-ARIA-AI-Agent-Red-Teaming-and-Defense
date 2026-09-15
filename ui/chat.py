@@ -1,12 +1,18 @@
 """Chat execution and per-turn evidence display."""
 
 import logging
+import re
 import streamlit as st
 import agent
 from defenses import pipeline, conversation_guard as cguard
 from ui.reports import _log_turn
 
 logger = logging.getLogger(__name__)
+
+
+def _chat_markdown(content):
+    """Render dollar amounts literally without changing stored model evidence."""
+    return re.sub(r"(?<!\\)\$(?=\d)", r"\\$", content)
 
 
 def _render_turn_trace(trace, mode, model=""):
@@ -84,7 +90,7 @@ def render_chat(conn):
             msg["role"],
             avatar="🤖" if msg["role"] == "assistant" else "👤",
         ):
-            st.markdown(msg["content"])
+            st.markdown(_chat_markdown(msg["content"]))
             if msg["role"] == "assistant":
                 _render_turn_trace(msg.get("guard_trace", []),
                                    msg.get("mode", ""), msg.get("model", ""))
@@ -119,7 +125,7 @@ def render_chat(conn):
             "user",
             avatar="👤",
         ):
-            st.markdown(prompt)
+            st.markdown(_chat_markdown(prompt))
 
         # ── Run ARIA (unguarded target, or guarded pipeline) ──
         mode = st.session_state.get("defense_mode", "Unguarded")
@@ -188,7 +194,7 @@ def render_chat(conn):
                     guard_trace = [{"layer": "error", "action": "error",
                                     "detail": error}]
 
-            st.markdown(response)
+            st.markdown(_chat_markdown(response))
 
             # ── Guard / tool trace (evidence for screenshots) ──
             _render_turn_trace(guard_trace, mode, model)
