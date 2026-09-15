@@ -24,3 +24,5 @@ Thumbs.db
 
 # Streamlit local secrets
 .streamlit/secrets.toml
+# Red-team run artifacts
+redteam/results/

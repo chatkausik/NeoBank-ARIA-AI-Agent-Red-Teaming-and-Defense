@@ -1,4 +1,4 @@
-# seed_data.py — Customer and transaction data for NeoBank ARIA workshop
+# seed_data.py — Fictional customer and transaction data for NeoBank ARIA
 
 CUSTOMERS = [
     {
