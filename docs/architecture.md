@@ -4,6 +4,8 @@ Six diagrams of the current implementation, with editable Mermaid sources. The [
 
 The [final project paper (Word)](NeoBank_ARIA_Final_Project_Paper.docx) brings these views together with the implementation and results. See the [technical reference](technical_reference.md) for interface details, [validation record](validation.md) for tested claims, and [documentation index](README.md) for the full reading guide.
 
+For a consolidated view, start with the [one-page architecture diagram](architecture_one_page.md).
+
 ## Design decisions and why they matter
 
 | Decision | Reason | Practical limit |

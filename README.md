@@ -22,6 +22,7 @@ for the complete design, implementation, evidence, and limitations. The
 | Read this | For |
 |---|---|
 | [Technical reference](docs/technical_reference.md) | Module responsibilities, runtime interfaces, configuration, and data contracts |
+| [One-page architecture](docs/architecture_one_page.md) | Consolidated application, defenses, data access, and evaluation diagram |
 | [Architecture atlas](docs/architecture.md) · [visual version](architecture.html) | Six diagrams, trust boundaries, and design rationale |
 | [Validation record](docs/validation.md) | Offline test scope, final live-run provenance, outcomes, and interpretation limits |
 | [Code review](docs/code_review.md) | What changed, why it changed, and remaining work |
@@ -254,6 +255,7 @@ be evaluated against the recorded cases and the remaining trust boundaries.
 │   ├── technical_reference.md  # Interfaces, modules, configuration, data contracts
 │   ├── validation.md     # Test coverage, run provenance, outcomes and limits
 │   ├── architecture.md   # Editable Mermaid diagrams and design rationale
+│   ├── architecture_one_page.md  # Consolidated architecture diagram
 │   ├── attack_playbook.md  code_review.md
 │   └── findings_report.md  findings_report.html  # Generated evidence reports
 └── requirements.txt

@@ -9,6 +9,7 @@ This documentation describes the completed fictional banking-agent security proj
 | [Final project paper — Word](NeoBank_ARIA_Final_Project_Paper.docx) | A single detailed project paper for review, sharing, or submission |
 | [Project README](../README.md) | Purpose, quick start, current results, and repository structure |
 | [Technical reference](technical_reference.md) | Module responsibilities, configuration, runtime interfaces, tool/evidence contracts, and operational behavior |
+| [One-page architecture](architecture_one_page.md) | A consolidated diagram of application execution, defenses, data, and evaluation |
 | [Architecture atlas — editable Mermaid](architecture.md) | Six diagrams with source references, design rationale, and trust assumptions |
 | [Architecture atlas — visual HTML](../architecture.html) | An offline visual guide to the system, requests, data access, risk, evaluation, and SQLite schema |
 | [Validation record](validation.md) | Offline test coverage, live-run provenance, results, and limits of the validation |
